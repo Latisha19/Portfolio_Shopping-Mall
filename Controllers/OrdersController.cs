@@ -23,6 +23,7 @@ namespace MVCCC.Controllers
         [HttpPost]
         public ActionResult Create(Orders order)
         {
+            TempData["Type"] = "Create";
             DBmanager dbmanager = new DBmanager();
             try
             {
@@ -32,10 +33,12 @@ namespace MVCCC.Controllers
                 }
                 DateTime date = DateTime.Now;
                 ViewBag.Date = date;
+                TempData["Result"] = "success";
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                TempData["Result"] = "error";
             }
 
             return RedirectToAction("../Home/Index");
@@ -55,6 +58,8 @@ namespace MVCCC.Controllers
         [HttpPost]
         public ActionResult Edit(Orders order)
         {
+            TempData["Type"] = "Edit";
+
             if (ModelState.IsValid)
             {
                 DBmanager dbmanager = new DBmanager();

@@ -7,6 +7,8 @@
 
     List<MVCCC.Models.Orders> orders = ViewBag.Orders;
 
+    var type = TempData["Type"] as string;
+    var result = TempData["Result"] as string;
 }
 
 <style>
@@ -23,6 +25,44 @@
         <div>
             Time: @date.ToString("yyyy/MM/dd HH:mm:ss")
         </div>
+
+        @if (!string.IsNullOrEmpty(result))
+        {
+            <div class="position-relative" aria-live="polite" aria-atomic="true" style="display: contents; min-height: 200px; z-index: 1050; ">
+                <div class="toast-container position-fixed end-0 p-3" style="top: 5%;">
+                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">Notification</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            @if (type == "Create")
+                            {
+                                if (result == "success")
+                                {
+                                    <span class="text-success">Create order successfully!</span>
+                                }
+                                else if (result == "error")
+                                {
+                                    <span class="text-danger">Failed to create order. Please try again.</span>
+                                }
+                            }
+                            else if (type == "Edit")
+                            {
+                                if (result == "success")
+                                {
+                                    <span class="text-success">Order was updated successfully!</span>
+                                }
+                                else if (result == "error")
+                                {
+                                    <span class="text-danger">Failed to update order. Please try again.</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
 
         <div class="row">
             <div class="col-6">
@@ -69,3 +109,14 @@
         </table>
     </div>
 </main>
+
+<script>
+    //可讓 toast 自動消失
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        var toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl)
+        })
+        toastList.forEach(toast => toast.show());
+    });
+</script>
