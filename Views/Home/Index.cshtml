@@ -9,6 +9,7 @@
 
     var type = TempData["Type"] as string;
     var result = TempData["Result"] as string;
+    int rowNumber = 1;
 }
 
 <style>
@@ -16,7 +17,7 @@
 
 <main>
     <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">Side Project: 簡易訂購後台管理</h1>
+        <h1 id="title">簡易訂購後台管理</h1>
         <p class="lead"></p>
     </section>
 
@@ -58,6 +59,17 @@
                                     <span class="text-danger">Failed to update order. Please try again.</span>
                                 }
                             }
+                            else if (type == "Delete")
+                            {
+                                if (result == "success")
+                                {
+                                    <span class="text-success">Delete order successfully!</span>
+                                }
+                                else if (result == "error")
+                                {
+                                    <span class="text-danger">Failed to delete order. Please try again.</span>
+                                }
+                            }
                         </div>
                     </div>
                 </div>
@@ -79,31 +91,36 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th scope="col">Order id</th>
+                    <th scope="col">#</th>
                     <th scope="col">Category</th>
                     <th scope="col">Name</th>
                     <th scope="col">Price</th>
                     <th scope="col">Customer</th>
+                    <th scope="col">Quantity</th>
                     <th scope="col">Operation</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (MVCCC.Models.Orders order in orders)
                 {
-                    <tr>
-                        <td>@order.OrderId</td>
-                        <td>@order.Category.ToString()</td>
+                    <tr id="order-@order.OrderId">
+                        <td>@rowNumber</td>
+                        <td>@order.CategoryId.ToString()</td>
                         <td>@order.Name.ToString()</td>
                         <td>@order.Price.ToString()</td>
                         <td>@order.Customer.ToString()</td>
+                        <td>@order.Quantity.ToString()</td>
                         <td>
                             <button class="btn btn-warning">
                                 @Html.ActionLink("Edit", "Edit", "Orders", new { orderId = @order.OrderId }
                                                     , new { @class = "text-decoration-none text-dark" })
                             </button>
-                            <button class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger" onclick="deleteOrder(@order.OrderId)">
+                                Delete
+                            </button>
                         </td>
                     </tr>
+                    rowNumber++;
                 }
             </tbody>
         </table>
@@ -119,4 +136,22 @@
         })
         toastList.forEach(toast => toast.show());
     });
+
+    function deleteOrder(orderId) {
+        if (confirm('Are you sure you want to delete this order?')) {
+            $.ajax({
+                url: '/Orders/Delete', // 確保URL與控制器路由對應
+                type: 'POST',
+                data: { orderId: orderId },
+                success: function (response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    //alert('An error occurred while trying to delete the order: ' + error);
+                }
+            });
+        }
+    }
 </script>

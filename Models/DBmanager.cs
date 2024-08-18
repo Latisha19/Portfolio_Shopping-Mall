@@ -27,10 +27,11 @@ namespace MVCCC.Models
                     Orders order = new Orders
                     {
                         OrderId = reader.GetInt32(reader.GetOrdinal("orderId")),
-                        Category = reader.GetString(reader.GetOrdinal("category")),
+                        CategoryId = reader.GetString(reader.GetOrdinal("categoryId")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
                         Price = reader.GetInt32(reader.GetOrdinal("price")),
                         Customer = reader.GetString(reader.GetOrdinal("customer")),
+                        Quantity = reader.GetInt32(reader.GetOrdinal("quantity"))
                     };
                     orders.Add(order);
                 }
@@ -47,16 +48,17 @@ namespace MVCCC.Models
         {
             SqlConnection sqlConnection = new SqlConnection(ConnStr);
             SqlCommand sqlCommand = new SqlCommand("" +
-                @"INSERT INTO dbo.Orders (category, ""name"", price, customer)
-                    VALUES (@category, @name, @price, @customer)");
+                @"INSERT INTO dbo.Orders (categoryId, ""name"", price, customer, quantity)
+                    VALUES (@categoryId, @name, @price, @customer, @quantity)");
             sqlCommand.Connection = sqlConnection;
-            sqlCommand.Parameters.Add(new SqlParameter("@category", order.Category));
+            sqlCommand.Parameters.Add(new SqlParameter("@categoryId", order.CategoryId));
             sqlCommand.Parameters.Add(new SqlParameter("@name", order.Name));
             sqlCommand.Parameters.Add(new SqlParameter("@price", order.Price));
             sqlCommand.Parameters.Add(new SqlParameter("@customer", order.Customer));
+            sqlCommand.Parameters.Add(new SqlParameter("@quantity", order.Quantity));
             sqlConnection.Open();
 
-            SqlDataReader reader = sqlCommand.ExecuteReader();
+            sqlCommand.ExecuteReader();
             sqlConnection.Close();
         }
 
@@ -77,10 +79,11 @@ namespace MVCCC.Models
                     order = new Orders
                     {
                         OrderId = reader.GetInt32(reader.GetOrdinal("orderId")),
-                        Category = reader.GetString(reader.GetOrdinal("category")),
+                        CategoryId = reader.GetString(reader.GetOrdinal("categoryId")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
                         Price = reader.GetInt32(reader.GetOrdinal("price")),
                         Customer = reader.GetString(reader.GetOrdinal("customer")),
+                        Quantity = reader.GetInt32(reader.GetOrdinal("quantity"))
                     };
                 }
             }
@@ -97,17 +100,31 @@ namespace MVCCC.Models
             SqlConnection sqlConnection = new SqlConnection(ConnStr);
             SqlCommand sqlCommand = new SqlCommand("" +
                 @"UPDATE dbo.Orders
-                    SET category = @category, ""name"" = @name, price = @price, customer = @customer
+                    SET categoryId = @categoryId, ""name"" = @name, price = @price, 
+                        customer = @customer, quantity = @quantity
                     WHERE orderId = @orderId");
             sqlCommand.Connection = sqlConnection;
             sqlCommand.Parameters.Add(new SqlParameter("@orderId", order.OrderId));
-            sqlCommand.Parameters.Add(new SqlParameter("@category", order.Category));
+            sqlCommand.Parameters.Add(new SqlParameter("@categoryId", order.CategoryId));
             sqlCommand.Parameters.Add(new SqlParameter("@name", order.Name));
             sqlCommand.Parameters.Add(new SqlParameter("@price", order.Price));
             sqlCommand.Parameters.Add(new SqlParameter("@customer", order.Customer));
+            sqlCommand.Parameters.Add(new SqlParameter("@quantity", order.Quantity));
             sqlConnection.Open();
 
-            SqlDataReader reader = sqlCommand.ExecuteReader();
+            sqlCommand.ExecuteReader();
+            sqlConnection.Close();
+        }
+
+        public void DeleteOrder(int orderId)
+        {
+            SqlConnection sqlConnection = new SqlConnection(ConnStr);
+            SqlCommand sqlCommand = new SqlCommand("DELETE FROM dbo.Orders WHERE orderId = @orderId");
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.Parameters.Add(new SqlParameter("@orderId", orderId));
+            sqlConnection.Open();
+
+            sqlCommand.ExecuteReader();
             sqlConnection.Close();
         }
     }

@@ -83,5 +83,31 @@ namespace MVCCC.Controllers
         }
 
         #endregion
+
+        [HttpPost]
+        public ActionResult Delete(int orderId)
+        {
+            TempData["Type"] = "Delete";
+
+            if (ModelState.IsValid)
+            {
+                DBmanager dbmanager = new DBmanager();
+                try
+                {
+                    dbmanager.DeleteOrder(orderId);
+                    DateTime date = DateTime.Now;
+                    ViewBag.Date = date;
+                    TempData["Result"] = "success";
+                    return Json(new { success = true });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    TempData["Result"] = "error";
+                    return Json(new { success = false });
+                }
+            }
+            return View();
+        }
     }
 }

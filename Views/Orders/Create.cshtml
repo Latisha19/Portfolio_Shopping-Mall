@@ -13,10 +13,10 @@
 @using (Html.BeginForm("Create", "Orders", FormMethod.Post))
 {
     <div class="form-group row my-3">
-        @Html.LabelFor(m => m.Category, new { @class = "col-form-label col-sm-2" })
+        @Html.LabelFor(m => m.CategoryId, "Category", new { @class = "col-form-label col-sm-2" })
 
         <div class="col-sm-10">
-            @Html.TextBoxFor(m => m.Category, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.CategoryId, new { @class = "form-control" })
         </div>
     </div>
 
@@ -39,6 +39,13 @@
         @Html.LabelFor(m => m.Customer, new { @class = "col-form-label col-sm-2" })
         <div class="col-sm-10">
             @Html.TextBoxFor(m => m.Customer, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group row my-3">
+        @Html.LabelFor(m => m.Quantity, new { @class = "col-form-label col-sm-2" })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(m => m.Quantity, new { @class = "form-control", type = "number" })
         </div>
     </div>
 
