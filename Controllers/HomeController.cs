@@ -1,5 +1,8 @@
-﻿using System;
+﻿using MVCCC.Models;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,6 +13,14 @@ namespace MVCCC.Controllers
     {
         public ActionResult Index()
         {
+            DateTime date = DateTime.Now;
+
+            DBmanager dbmanager = new DBmanager();
+            List<Orders> orders = dbmanager.GetOrders();
+
+            ViewBag.Date = date;
+            ViewBag.Orders = orders;
+
             return View();
         }
 
