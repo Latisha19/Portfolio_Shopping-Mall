@@ -1,8 +1,12 @@
-﻿@{
+﻿@model MVCCC.Models.Orders
+
+@{
     ViewBag.Title = "Home Page";
 
     var date = ViewBag.Date;
-    var orders = ViewBag.Orders;
+
+    List<MVCCC.Models.Orders> orders = ViewBag.Orders;
+
 }
 
 <style>
@@ -44,26 +48,19 @@
                 </tr>
             </thead>
             <tbody>
-                @for (int i = 0; i < orders.Count; i++)
+                @foreach (MVCCC.Models.Orders order in orders)
                 {
                     <tr>
+                        <td>@order.OrderId</td>
+                        <td>@order.Category.ToString()</td>
+                        <td>@order.Name.ToString()</td>
+                        <td>@order.Price.ToString()</td>
+                        <td>@order.Customer.ToString()</td>
                         <td>
-                            @(i+1)
-                        </td>
-                        <td>
-                            @orders[i].Category.ToString()
-                        </td>
-                        <td>
-                            @orders[i].Name.ToString()
-                        </td>
-                        <td>
-                            @orders[i].Price.ToString()
-                        </td>
-                        <td>
-                            @orders[i].Customer.ToString()
-                        </td>
-                        <td>
-                            <button class="btn btn-warning">Edit</button>
+                            <button class="btn btn-warning">
+                                @Html.ActionLink("Edit", "Edit", "Orders", new { orderId = @order.OrderId }
+                                                    , new { @class = "text-decoration-none text-dark" })
+                            </button>
                             <button class="btn btn-danger">Delete</button>
                         </td>
                     </tr>

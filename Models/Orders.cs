@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,7 @@ namespace MVCCC.Models
 {
     public class Orders
     {
+        [Key]
         public int OrderId { get; set; }
         public string Category { get; set; }
         public string Name { get; set; }
@@ -15,7 +17,6 @@ namespace MVCCC.Models
         public string Customer { get; set; }
         public Orders()
         {
-            OrderId = 0;
             Category = string.Empty;
             Name = string.Empty;
             Price = null;
