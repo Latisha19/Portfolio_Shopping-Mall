@@ -1,4 +1,5 @@
-﻿using MVCCC.Models;
+﻿using MVCCC.DAL;
+using MVCCC.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,26 +11,38 @@ namespace MVCCC.Controllers
 {
     public class OrdersController : Controller
     {
-        private readonly string Connstr = ConfigurationManager.ConnectionStrings["MSSQL_DBconnect"].ConnectionString;
-
         #region CREATE
         // GET: Orders
         public ActionResult Create()
         {
-            return View();
+            TestMVCCC_Context db = new TestMVCCC_Context();
+            List<SelectListItem> categories = db.Categories
+                                                .Select(c => new SelectListItem
+                                                {
+                                                    Text = c.CategoryName,
+                                                    Value = c.CategoryId.ToString()
+                                                })
+                                                .ToList();
+
+            OrderViewModel viewModel = new OrderViewModel
+            {
+                Categories = categories
+            };
+            return View(viewModel);
         }
 
         // POST: Orders/Create
         [HttpPost]
-        public ActionResult Create(Orders order)
+        public ActionResult Create(OrderViewModel orderViewModel)
         {
             TempData["Type"] = "Create";
-            DBmanager dbmanager = new DBmanager();
+            TestMVCCC_Context db = new TestMVCCC_Context();
+            DBmanager dbmanager = new DBmanager(db);
             try
             {
                 if (ModelState.IsValid)
                 {
-                    dbmanager.CreateOrder(order);
+                    dbmanager.CreateOrder(orderViewModel.OrderDto);
                 }
                 DateTime date = DateTime.Now;
                 ViewBag.Date = date;
@@ -47,25 +60,44 @@ namespace MVCCC.Controllers
 
         #region EDIT
         // GET: Orders/Edit?orderId={OrderId}
+        [HttpGet]
         public ActionResult Edit(int orderId)
         {
-            DBmanager dBmanager = new DBmanager();
-            Orders order = dBmanager.GetOrderById(orderId);
-            return View(order);
+            TestMVCCC_Context db = new TestMVCCC_Context();
+            DBmanager dBmanager = new DBmanager(db);
+            OrderDTO orderDTO = dBmanager.GetOrderById(orderId);
+
+            List<SelectListItem> categories = db.Categories
+                                                .Select(c => new SelectListItem
+                                                {
+                                                    Text = c.CategoryName,
+                                                    Value = c.CategoryId.ToString()
+                                                })
+                                                .ToList();
+
+            // 使用 ViewModel
+            OrderViewModel viewModel = new OrderViewModel
+            {
+                OrderDto = orderDTO,
+                Categories = categories
+            };
+
+            return View(viewModel);
         }
 
         // POST: Orders/Edit?orderId={OrderId}
         [HttpPost]
-        public ActionResult Edit(Orders order)
+        public ActionResult Edit(OrderViewModel orderViewModel)
         {
             TempData["Type"] = "Edit";
 
             if (ModelState.IsValid)
             {
-                DBmanager dbmanager = new DBmanager();
+                TestMVCCC_Context db = new TestMVCCC_Context();
+                DBmanager dbmanager = new DBmanager(db);
                 try
                 {
-                    dbmanager.UpdateOrder(order);
+                    dbmanager.UpdateOrder(orderViewModel.OrderDto);
                     DateTime date = DateTime.Now;
                     ViewBag.Date = date;
                     TempData["Result"] = "success";
@@ -79,7 +111,7 @@ namespace MVCCC.Controllers
                 return RedirectToAction("../Home/Index");
             }
 
-            return View(order);
+            return View(orderViewModel);
         }
 
         #endregion
@@ -91,7 +123,8 @@ namespace MVCCC.Controllers
 
             if (ModelState.IsValid)
             {
-                DBmanager dbmanager = new DBmanager();
+                TestMVCCC_Context db = new TestMVCCC_Context();
+                DBmanager dbmanager = new DBmanager(db);
                 try
                 {
                     dbmanager.DeleteOrder(orderId);

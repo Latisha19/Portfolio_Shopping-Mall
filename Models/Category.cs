@@ -6,18 +6,22 @@ using System.Web;
 
 namespace MVCCC.Models
 {
-    public class Categories
+    public class Category
     {
         [Key]
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public string Description { get; set; }
-        public Categories()
+
+        // 對應的 Order 集合
+        public virtual ICollection<Order> Orders { get; set; }
+
+        public Category()
         {
             CategoryName = string.Empty;
             Description = string.Empty;
         }
-        public Categories(int _categoryId, string _categoryName, string _description)
+        public Category(int _categoryId, string _categoryName, string _description)
         {
             CategoryId = _categoryId;
             CategoryName = _categoryName;
