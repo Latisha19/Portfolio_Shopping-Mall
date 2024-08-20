@@ -45,16 +45,16 @@ namespace MVCCC.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "About Me";
+            ViewBag.Message = "About this side project";
 
             return View();
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
+        //public ActionResult Contact()
+        //{
+        //    ViewBag.Message = "Your contact page.";
 
-            return View();
-        }
+        //    return View();
+        //}
     }
 }
