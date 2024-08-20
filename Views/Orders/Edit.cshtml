@@ -1,4 +1,4 @@
-﻿@model MVCCC.Models.Orders
+﻿@model MVCCC.Models.OrderViewModel
 
 @Styles.Render("~/Content/css")
 @Scripts.Render("~/bundles/modernizr")
@@ -9,51 +9,51 @@
 
 <h2>Edit Order Details</h2>
 
-@using (Html.BeginForm("Edit", "Orders", new { orderId = Model.OrderId }, FormMethod.Post))
+@using (Html.BeginForm("Edit", "Orders", new { orderId = Model.OrderDto.OrderId }, FormMethod.Post))
 {
     <div class="form-group row my-3">
-        @Html.LabelFor(m => m.OrderId, new { @class = "col-form-label col-sm-2" })
+        @Html.LabelFor(m => m.OrderDto.OrderId, new { @class = "col-form-label col-sm-2" })
 
         <div class="col-sm-10">
-            @Html.TextBoxFor(m => m.OrderId, new { @class = "form-control", @disabled = "disabled" })
+            @Html.TextBoxFor(m => m.OrderDto.OrderId, new { @class = "form-control", @readonly = "readonly" })
         </div>
     </div>
 
 
     <div class="form-group row my-3">
-        @Html.LabelFor(m => m.CategoryId, "Category", new { @class = "col-form-label col-sm-2" })
+        @Html.LabelFor(m => m.OrderDto.CategoryId, "Category", new { @class = "col-form-label col-sm-2" })
 
         <div class="col-sm-10">
-            @Html.TextBoxFor(m => m.CategoryId, new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.OrderDto.CategoryId, Model.Categories, new { @class = "form-select" })
         </div>
     </div>
 
     <div class="form-group row my-3">
-        @Html.LabelFor(m => m.Name, new { @class = "col-form-label col-sm-2" })
+        @Html.LabelFor(m => m.OrderDto.Name, new { @class = "col-form-label col-sm-2" })
 
         <div class="col-sm-10">
-            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.OrderDto.Name, new { @class = "form-control" })
         </div>
     </div>
 
     <div class="form-group row my-3">
-        @Html.LabelFor(m => m.Price, new { @class = "col-form-label col-sm-2" })
+        @Html.LabelFor(m => m.OrderDto.Price, new { @class = "col-form-label col-sm-2" })
         <div class="col-sm-10">
-            @Html.TextBoxFor(m => m.Price, new { @class = "form-control", type = "number" })
+            @Html.TextBoxFor(m => m.OrderDto.Price, new { @class = "form-control", type = "number" })
         </div>
     </div>
 
     <div class="form-group row my-3">
-        @Html.LabelFor(m => m.Customer, new { @class = "col-form-label col-sm-2" })
+        @Html.LabelFor(m => m.OrderDto.Customer, new { @class = "col-form-label col-sm-2" })
         <div class="col-sm-10">
-            @Html.TextBoxFor(m => m.Customer, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.OrderDto.Customer, new { @class = "form-control" })
         </div>
     </div>
 
     <div class="form-group row my-3">
-        @Html.LabelFor(m => m.Quantity, new { @class = "col-form-label col-sm-2" })
+        @Html.LabelFor(m => m.OrderDto.Quantity, new { @class = "col-form-label col-sm-2" })
         <div class="col-sm-10">
-            @Html.TextBoxFor(m => m.Quantity, new { @class = "form-control", type = "number" })
+            @Html.TextBoxFor(m => m.OrderDto.Quantity, new { @class = "form-control", type = "number" })
         </div>
     </div>
 

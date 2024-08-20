@@ -1,8 +1,10 @@
 --CREATE DATABASE TestMVCCC;
 
+--DROP TABLE Orders;
+
 --CREATE TABLE "Orders" (
 --	orderId INT IDENTITY (1, 1) NOT NULL PRIMARY KEY,
---	categoryId varchar(50),
+--	categoryId INT REFERENCES Categories (categoryId),
 --	"name" varchar(50),
 --	price INT,
 --	customer varchar(50),
@@ -10,11 +12,11 @@
 --);
 
 --INSERT INTO dbo.Orders (categoryId, "name", price, customer, quantity)
---VALUES ('Fruit', 'Apple', 25, '小名', 3),
---		('Fruit', 'Banana', 50, '小華', 5),
---		('Fruit', 'Pineapple', 30, '小英', 4),
---		('Fruit', 'Mango', 60, '小李', 6),
---		('Fruit', 'Guava', 30, '小張', 2);
+--VALUES (7, 'Apple', 25, '小名', 3),
+--		(7, 'Banana', 50, '小華', 5),
+--		(7, 'Pineapple', 30, '小英', 4),
+--		(7, 'Mango', 60, '小李', 6),
+--		(7, 'Guava', 30, '小張', 2);
 
 
 --CREATE TABLE "Categories" (

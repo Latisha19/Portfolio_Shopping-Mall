@@ -1,11 +1,11 @@
-﻿@model MVCCC.Models.Orders
+﻿@model MVCCC.Models.TestMVCCCListViewModel
 
 @{
     ViewBag.Title = "Home Page";
 
     var date = ViewBag.Date;
 
-    List<MVCCC.Models.Orders> orders = ViewBag.Orders;
+    List<MVCCC.Models.OrderDTO> orders = ViewBag.Orders;
 
     var type = TempData["Type"] as string;
     var result = TempData["Result"] as string;
@@ -101,11 +101,15 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (MVCCC.Models.Orders order in orders)
+                @foreach (MVCCC.Models.OrderDTO order in orders)
                 {
+                    string categoryName = Model.Categories
+                                            .FirstOrDefault(c => c.CategoryId == order.CategoryId)?
+                                            .CategoryName;
+
                     <tr id="order-@order.OrderId">
                         <td>@rowNumber</td>
-                        <td>@order.CategoryId.ToString()</td>
+                        <td>@categoryName</td>
                         <td>@order.Name.ToString()</td>
                         <td>@order.Price.ToString()</td>
                         <td>@order.Customer.ToString()</td>
