@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVCCC.DAL;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -9,123 +10,79 @@ namespace MVCCC.Models
 {
     public class DBmanager
     {
-        private readonly string ConnStr = ConfigurationManager.ConnectionStrings["MSSQL_DBconnect"].ConnectionString;
+        private readonly TestMVCCC_Context db;
 
-        public List<Orders> GetOrders()
+        public DBmanager(TestMVCCC_Context _db)
         {
-            List<Orders> orders = new List<Orders>();
-            SqlConnection sqlConnection = new SqlConnection(ConnStr);
-            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Orders");
-            sqlCommand.Connection = sqlConnection;
-            sqlConnection.Open();
-
-            SqlDataReader reader = sqlCommand.ExecuteReader();
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    Orders order = new Orders
-                    {
-                        OrderId = reader.GetInt32(reader.GetOrdinal("orderId")),
-                        CategoryId = reader.GetString(reader.GetOrdinal("categoryId")),
-                        Name = reader.GetString(reader.GetOrdinal("name")),
-                        Price = reader.GetInt32(reader.GetOrdinal("price")),
-                        Customer = reader.GetString(reader.GetOrdinal("customer")),
-                        Quantity = reader.GetInt32(reader.GetOrdinal("quantity"))
-                    };
-                    orders.Add(order);
-                }
-            }
-            else
-            {
-                Console.WriteLine("資料庫為空！");
-            }
-            sqlConnection.Close();
-            return orders;
+            db = _db ?? throw new ArgumentNullException(nameof(_db));
         }
 
-        public void CreateOrder(Orders order)
+        public List<OrderDTO> GetOrders()
         {
-            SqlConnection sqlConnection = new SqlConnection(ConnStr);
-            SqlCommand sqlCommand = new SqlCommand("" +
-                @"INSERT INTO dbo.Orders (categoryId, ""name"", price, customer, quantity)
-                    VALUES (@categoryId, @name, @price, @customer, @quantity)");
-            sqlCommand.Connection = sqlConnection;
-            sqlCommand.Parameters.Add(new SqlParameter("@categoryId", order.CategoryId));
-            sqlCommand.Parameters.Add(new SqlParameter("@name", order.Name));
-            sqlCommand.Parameters.Add(new SqlParameter("@price", order.Price));
-            sqlCommand.Parameters.Add(new SqlParameter("@customer", order.Customer));
-            sqlCommand.Parameters.Add(new SqlParameter("@quantity", order.Quantity));
-            sqlConnection.Open();
+            List<OrderDTO> getOrders = db.Orders.Select(x => new OrderDTO
+            {
+                OrderId = x.OrderId,
+                CategoryId = x.CategoryId,
+                Name = x.Name,
+                Price = x.Price,
+                Customer = x.Customer,
+                Quantity = x.Quantity
+            }).ToList();
 
-            sqlCommand.ExecuteReader();
-            sqlConnection.Close();
+            return getOrders;
         }
 
-        public Orders GetOrderById(int orderId)
+        public void CreateOrder(OrderDTO order)
         {
-            Orders order = new Orders();
-            SqlConnection sqlConnection = new SqlConnection(ConnStr);
-            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Orders WHERE orderId = @orderId");
-            sqlCommand.Parameters.Add(new SqlParameter("@orderId", orderId));
-            sqlCommand.Connection = sqlConnection;
-            sqlConnection.Open();
+            Order newOrder = new Order
+            {
+                OrderId = order.OrderId,
+                CategoryId = order.CategoryId,
+                Name = order.Name,
+                Price = order.Price,
+                Customer = order.Customer,
+                Quantity = order.Quantity
+            };
 
-            SqlDataReader reader = sqlCommand.ExecuteReader();
-            if (reader.HasRows)
-            {
-                while (reader.Read())
+            db.Orders.Add(newOrder);
+            db.SaveChanges();
+        }
+
+        public OrderDTO GetOrderById(int orderId)
+        {
+            OrderDTO order = db.Orders
+                .Where(x => x.OrderId == orderId)
+                .Select(x => new OrderDTO
                 {
-                    order = new Orders
-                    {
-                        OrderId = reader.GetInt32(reader.GetOrdinal("orderId")),
-                        CategoryId = reader.GetString(reader.GetOrdinal("categoryId")),
-                        Name = reader.GetString(reader.GetOrdinal("name")),
-                        Price = reader.GetInt32(reader.GetOrdinal("price")),
-                        Customer = reader.GetString(reader.GetOrdinal("customer")),
-                        Quantity = reader.GetInt32(reader.GetOrdinal("quantity"))
-                    };
-                }
-            }
-            else
-            {
-                Console.WriteLine("找不到該筆資料");
-            }
-            sqlConnection.Close();
+                    OrderId = x.OrderId,
+                    CategoryId = x.CategoryId,
+                    Name = x.Name,
+                    Price = x.Price,
+                    Customer = x.Customer,
+                    Quantity = x.Quantity
+                }).FirstOrDefault();
+
             return order;
         }
 
-        public void UpdateOrder(Orders order)
+        public void UpdateOrder(OrderDTO order)
         {
-            SqlConnection sqlConnection = new SqlConnection(ConnStr);
-            SqlCommand sqlCommand = new SqlCommand("" +
-                @"UPDATE dbo.Orders
-                    SET categoryId = @categoryId, ""name"" = @name, price = @price, 
-                        customer = @customer, quantity = @quantity
-                    WHERE orderId = @orderId");
-            sqlCommand.Connection = sqlConnection;
-            sqlCommand.Parameters.Add(new SqlParameter("@orderId", order.OrderId));
-            sqlCommand.Parameters.Add(new SqlParameter("@categoryId", order.CategoryId));
-            sqlCommand.Parameters.Add(new SqlParameter("@name", order.Name));
-            sqlCommand.Parameters.Add(new SqlParameter("@price", order.Price));
-            sqlCommand.Parameters.Add(new SqlParameter("@customer", order.Customer));
-            sqlCommand.Parameters.Add(new SqlParameter("@quantity", order.Quantity));
-            sqlConnection.Open();
+            Order updOrder = db.Orders.Find(order.OrderId);
 
-            sqlCommand.ExecuteReader();
-            sqlConnection.Close();
+            updOrder.CategoryId = order.CategoryId;
+            updOrder.Name = order.Name;
+            updOrder.Price = order.Price;
+            updOrder.Customer = order.Customer;
+            updOrder.Quantity = order.Quantity;
+
+            db.SaveChanges();
         }
 
         public void DeleteOrder(int orderId)
         {
-            SqlConnection sqlConnection = new SqlConnection(ConnStr);
-            SqlCommand sqlCommand = new SqlCommand("DELETE FROM dbo.Orders WHERE orderId = @orderId");
-            sqlCommand.Connection = sqlConnection;
-            sqlCommand.Parameters.Add(new SqlParameter("@orderId", orderId));
-            sqlConnection.Open();
-
-            sqlCommand.ExecuteReader();
-            sqlConnection.Close();
+            Order delOrder = db.Orders.Find(orderId);
+            db.Orders.Remove(delOrder);
+            db.SaveChanges();
         }
     }
 }
