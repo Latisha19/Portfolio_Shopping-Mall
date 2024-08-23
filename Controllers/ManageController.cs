@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using MVCCC.DAL;
 using MVCCC.Models;
 
 namespace MVCCC.Controllers
@@ -32,9 +33,9 @@ namespace MVCCC.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -214,6 +215,35 @@ namespace MVCCC.Controllers
         }
 
         //
+        // GET: /Manage/ChangeUserName
+        public ActionResult ChangeUserName()
+        {
+            //TestMVCCC_Context db = new TestMVCCC_Context();
+            //var a = db.Users.Find(userId);
+
+            return View();
+        }
+
+        //
+        // POST: /Manage/ChangeUserName
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeUserName(ChangeUserNameViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            //var result = await UserManager.ChangeUserNameAsync(User.Identity.GetUserId(), model.OldUserName, model.NewUserName);
+            TestMVCCC_Context db = new TestMVCCC_Context();
+            User user = db.Users.Find(User.Identity.GetUserId());
+            user.UserName = model.NewUserName;
+            await db.SaveChangesAsync();
+
+            return View(model);
+        }
+
+        //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()
         {
@@ -333,7 +363,7 @@ namespace MVCCC.Controllers
             base.Dispose(disposing);
         }
 
-#region Helper
+        #region Helper
         // 新增外部登入時用來當做 XSRF 保護
         private const string XsrfKey = "XsrfId";
 
@@ -384,6 +414,6 @@ namespace MVCCC.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }

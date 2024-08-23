@@ -19,6 +19,7 @@ namespace MVCCC.DAL
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
         //public DbSet<Account> Courses { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -58,6 +59,54 @@ namespace MVCCC.DAL
 
             modelBuilder.Entity<Order>()
                 .Property(e => e.Quantity);
+
+            modelBuilder.Entity<Order>()
+                .Property(e => e.DateTime)
+                .HasColumnType("datetime");
+
+            // User
+            modelBuilder.Entity<User>()
+                .HasKey(e => e.UserId);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.Email)
+                .HasMaxLength(256);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.EmailConfirmed);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.PasswordHash);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.SecurityStamp);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.PhoneNumber);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.PhoneNumberConfirmed);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.TwoFactorEnabled);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.LockoutEndDateUtc)
+                .HasColumnType("datetime");
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.LockoutEnabled);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.AccessFailedCount);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.UserName)
+                .HasMaxLength(256);
+
+            modelBuilder.Entity<User>()
+                .Property(e => e.Discriminator)
+                .HasMaxLength(128);
 
 
             base.OnModelCreating(modelBuilder);

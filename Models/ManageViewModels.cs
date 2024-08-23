@@ -25,6 +25,18 @@ namespace MVCCC.Models
         public string Purpose { get; set; }
     }
 
+    public class ChangeUserNameViewModel
+    {
+        [Required]
+        [Display(Name = "Current User Name")]
+        public string OldUserName { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "New User Name")]
+        public string NewUserName { get; set; }
+    }
+
     public class SetPasswordViewModel
     {
         [Required]
