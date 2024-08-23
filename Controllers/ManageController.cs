@@ -51,6 +51,13 @@ namespace MVCCC.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet]
+        public ActionResult Users()
+        {
+            return View();
+        }
+
         //
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
@@ -100,6 +107,7 @@ namespace MVCCC.Controllers
             return RedirectToAction("ManageLogins", new { Message = message });
         }
 
+        #region Phone Number
         //
         // GET: /Manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()
@@ -130,7 +138,9 @@ namespace MVCCC.Controllers
             }
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
         }
+        #endregion
 
+        #region Two Factor Authentication
         //
         // POST: /Manage/EnableTwoFactorAuthentication
         [HttpPost]
@@ -161,6 +171,7 @@ namespace MVCCC.Controllers
             return RedirectToAction("Index", "Manage");
         }
 
+        #endregion
         //
         // GET: /Manage/VerifyPhoneNumber
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
@@ -214,6 +225,7 @@ namespace MVCCC.Controllers
             return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
         }
 
+        #region User Name
         //
         // GET: /Manage/ChangeUserName
         public ActionResult ChangeUserName()
@@ -242,7 +254,9 @@ namespace MVCCC.Controllers
 
             return View(model);
         }
+        #endregion
 
+        #region Password
         //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()
@@ -305,6 +319,8 @@ namespace MVCCC.Controllers
             // 如果執行到這裡，發生某項失敗，則重新顯示表單
             return View(model);
         }
+
+        #endregion
 
         //
         // GET: /Manage/ManageLogins

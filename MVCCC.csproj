@@ -298,6 +298,9 @@
     <Content Include="Views\Orders\Edit.cshtml" />
     <Content Include="Views\Manage\ChangeUserName.cshtml" />
     <Content Include="Views\Orders\OrdersList.cshtml" />
+    <Content Include="Views\Manage\Users.cshtml" />
+    <Content Include="Views\Orders\History.cshtml" />
+    <Content Include="Views\Orders\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -47,6 +47,20 @@ namespace MVCCC.Controllers
             return View(viewModel);
         }
 
+        [Authorize]
+        [HttpGet]
+        public ActionResult History()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult Dashboard()
+        {
+            return View();
+        }
+
         #endregion
 
         #region CREATE
