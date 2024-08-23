@@ -1,0 +1,163 @@
+﻿@model MVCCC.Models.TestMVCCCListViewModel
+
+@{
+    ViewBag.Title = "Orders List";
+
+    var date = ViewBag.Date;
+
+    List<MVCCC.Models.OrderDTO> orders = ViewBag.Orders;
+
+    var type = TempData["Type"] as string;
+    var result = TempData["Result"] as string;
+    int rowNumber = 1;
+}
+
+<style>
+</style>
+
+<main>
+    <section class="row" aria-labelledby="aspnetTitle">
+        <h1 id="title">Simple Order Management System</h1>
+        <p class="lead"></p>
+    </section>
+
+
+    <div class="container">
+        <div>
+            Time: @date.ToString("yyyy/MM/dd HH:mm:ss")
+        </div>
+
+        @if (!string.IsNullOrEmpty(result))
+        {
+            <div class="position-relative" aria-live="polite" aria-atomic="true" style="display: contents; min-height: 200px; z-index: 1050; ">
+                <div class="toast-container position-fixed end-0 p-3" style="top: 5%;">
+                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">Notification</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            @if (type == "Create")
+                            {
+                                if (result == "success")
+                                {
+                                    <span class="text-success">Create order successfully!</span>
+                                }
+                                else if (result == "error")
+                                {
+                                    <span class="text-danger">Failed to create order. Please try again.</span>
+                                }
+                            }
+                            else if (type == "Edit")
+                            {
+                                if (result == "success")
+                                {
+                                    <span class="text-success">Order was updated successfully!</span>
+                                }
+                                else if (result == "error")
+                                {
+                                    <span class="text-danger">Failed to update order. Please try again.</span>
+                                }
+                            }
+                            else if (type == "Delete")
+                            {
+                                if (result == "success")
+                                {
+                                    <span class="text-success">Delete order successfully!</span>
+                                }
+                                else if (result == "error")
+                                {
+                                    <span class="text-danger">Failed to delete order. Please try again.</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            @*<div class="col-6">
+                    <h2>Orders List</h2>
+                </div>*@
+            <div class="col-12 text-end">
+                @using (Html.BeginForm("Create", "Orders", FormMethod.Get))
+                {
+                    <button class="btn btn-primary float-end col-1" type="submit">Create</button>
+                }
+            </div>
+        </div>
+
+        <table class="table table-striped table-hover mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Order Time</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (MVCCC.Models.OrderDTO order in orders)
+                {
+                    string categoryName = Model.Categories
+                                            .FirstOrDefault(c => c.CategoryId == order.CategoryId)?
+                                            .CategoryName;
+
+                    <tr id="order-@order.OrderId">
+                        <td>@rowNumber</td>
+                        <td>@order.OrderDT.ToString()</td>
+                        <td>@categoryName</td>
+                        <td>@order.Name.ToString()</td>
+                        <td>@order.Price.ToString()</td>
+                        <td>@order.Customer.ToString()</td>
+                        <td>@order.Quantity.ToString()</td>
+                        <td>
+                            <button class="btn btn-warning">
+                                @Html.ActionLink("Edit", "Edit", "Orders", new { orderId = @order.OrderId }
+                                                    , new { @class = "text-decoration-none text-dark" })
+                            </button>
+                            <button type="submit" class="btn btn-danger" onclick="deleteOrder(@order.OrderId)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                    rowNumber++;
+                }
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<script>
+    //可讓 toast 自動消失
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        var toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl)
+        })
+        toastList.forEach(toast => toast.show());
+    });
+
+    function deleteOrder(orderId) {
+        if (confirm('Are you sure you want to delete this order?')) {
+            $.ajax({
+                url: '/Orders/Delete', // 確保URL與控制器路由對應
+                type: 'POST',
+                data: { orderId: orderId },
+                success: function (response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    //alert('An error occurred while trying to delete the order: ' + error);
+                }
+            });
+        }
+    }
+</script>
