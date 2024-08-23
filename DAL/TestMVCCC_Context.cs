@@ -61,7 +61,7 @@ namespace MVCCC.DAL
                 .Property(e => e.Quantity);
 
             modelBuilder.Entity<Order>()
-                .Property(e => e.DateTime)
+                .Property(e => e.OrderDT)
                 .HasColumnType("datetime");
 
             // User

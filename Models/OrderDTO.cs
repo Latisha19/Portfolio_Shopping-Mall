@@ -15,5 +15,6 @@ namespace MVCCC.Models
         public int? Price { get; set; }
         public string Customer { get; set; }
         public int Quantity { get; set; }
+        public DateTime? OrderDT { get; set; }
     }
 }

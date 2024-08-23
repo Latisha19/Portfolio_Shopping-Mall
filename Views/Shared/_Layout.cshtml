@@ -38,5 +38,9 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    @Styles.Render("~/Content/datetimepicker-2.5.20/jquery.datetimepicker.css")
+    @*@Scripts.Render("~/Content/datetimepicker-2.5.20/jquery.js")*@
+    @Scripts.Render("~/Content/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js")
 </body>
 </html>

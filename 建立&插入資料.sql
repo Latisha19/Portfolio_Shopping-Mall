@@ -4,6 +4,7 @@
 
 --CREATE TABLE "Orders" (
 --	orderId INT IDENTITY (1, 1) NOT NULL PRIMARY KEY,
+--	orderDT datetime,
 --	categoryId INT REFERENCES Categories (categoryId),
 --	"name" varchar(50),
 --	price INT,

@@ -92,6 +92,7 @@
             <thead>
                 <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Order Time</th>
                     <th scope="col">Category</th>
                     <th scope="col">Name</th>
                     <th scope="col">Price</th>
@@ -109,6 +110,7 @@
 
                     <tr id="order-@order.OrderId">
                         <td>@rowNumber</td>
+                        <td>@order.OrderDT.ToString()</td>
                         <td>@categoryName</td>
                         <td>@order.Name.ToString()</td>
                         <td>@order.Price.ToString()</td>

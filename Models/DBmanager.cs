@@ -26,7 +26,8 @@ namespace MVCCC.Models
                 Name = x.Name,
                 Price = x.Price,
                 Customer = x.Customer,
-                Quantity = x.Quantity
+                Quantity = x.Quantity,
+                OrderDT = x.OrderDT
             }).ToList();
 
             return getOrders;
@@ -74,6 +75,7 @@ namespace MVCCC.Models
             updOrder.Price = order.Price;
             updOrder.Customer = order.Customer;
             updOrder.Quantity = order.Quantity;
+            updOrder.OrderDT = order.OrderDT;
 
             db.SaveChanges();
         }

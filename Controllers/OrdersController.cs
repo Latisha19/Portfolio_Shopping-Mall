@@ -12,6 +12,7 @@ namespace MVCCC.Controllers
     public class OrdersController : Controller
     {
         #region CREATE
+
         // GET: Orders
         public ActionResult Create()
         {
@@ -59,6 +60,7 @@ namespace MVCCC.Controllers
         #endregion
 
         #region EDIT
+
         // GET: Orders/Edit?orderId={OrderId}
         [HttpGet]
         public ActionResult Edit(int orderId)
